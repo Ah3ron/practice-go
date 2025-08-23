@@ -55,7 +55,7 @@ func valid(email string) bool {
 // Login get user and password
 func Login(c *fiber.Ctx) error {
 	type LoginInput struct {
-		Identity string `json:"identity"`
+		Username string `json:"username"`
 		Password string `json:"password"`
 	}
 	input := new(LoginInput)
@@ -68,7 +68,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	identity := strings.TrimSpace(input.Identity)
+	username := strings.TrimSpace(input.Username)
 	pass := input.Password
 
 	var (
@@ -76,10 +76,10 @@ func Login(c *fiber.Ctx) error {
 		err       error
 	)
 
-	if valid(identity) {
-		userModel, err = getUserByEmail(identity)
+	if valid(username) {
+		userModel, err = getUserByEmail(username)
 	} else {
-		userModel, err = getUserByUsername(identity)
+		userModel, err = getUserByUsername(username)
 	}
 
 	if err != nil {
@@ -92,7 +92,7 @@ func Login(c *fiber.Ctx) error {
 		// не раскрываем детали
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Invalid identity or password",
+			"message": "Invalid username or password",
 		})
 	}
 
@@ -107,7 +107,22 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": t})
+	// Return both user and token as expected by frontend
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Success login",
+		"data": fiber.Map{
+			"user": fiber.Map{
+				"id":         userModel.ID,
+				"username":   userModel.Username,
+				"email":      userModel.Email,
+				"names":      userModel.Names,
+				"created_at": userModel.CreatedAt,
+				"updated_at": userModel.UpdatedAt,
+			},
+			"token": t,
+		},
+	})
 }
 
 func Register(c *fiber.Ctx) error {
