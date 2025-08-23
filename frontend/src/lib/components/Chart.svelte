@@ -10,7 +10,11 @@
     Legend,
     ArcElement,
     PointElement,
-    LineElement
+    LineElement,
+    BarController,
+    LineController,
+    PieController,
+    DoughnutController
   } from 'chart.js';
 
   // Register Chart.js components
@@ -23,7 +27,11 @@
     Legend,
     ArcElement,
     PointElement,
-    LineElement
+    LineElement,
+    BarController,
+    LineController,
+    PieController,
+    DoughnutController
   );
 
   export let type: 'bar' | 'line' | 'pie' | 'doughnut' = 'bar';
@@ -38,7 +46,7 @@
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: 'top' as const
       },
       tooltip: {
         backgroundColor: 'rgba(55, 65, 81, 0.9)',
@@ -47,28 +55,31 @@
         borderColor: '#6B7280',
         borderWidth: 1,
         cornerRadius: 8,
-        displayColors: true,
-      },
+        displayColors: true
+      }
     },
-    scales: type === 'pie' || type === 'doughnut' ? undefined : {
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(156, 163, 175, 0.2)',
-        },
-        ticks: {
-          color: 'rgba(107, 114, 128, 0.8)',
-        },
-      },
-      x: {
-        grid: {
-          color: 'rgba(156, 163, 175, 0.2)',
-        },
-        ticks: {
-          color: 'rgba(107, 114, 128, 0.8)',
-        },
-      },
-    },
+    scales:
+      type === 'pie' || type === 'doughnut'
+        ? undefined
+        : {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(156, 163, 175, 0.2)'
+              },
+              ticks: {
+                color: 'rgba(107, 114, 128, 0.8)'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(156, 163, 175, 0.2)'
+              },
+              ticks: {
+                color: 'rgba(107, 114, 128, 0.8)'
+              }
+            }
+          }
   };
 
   onMount(() => {
@@ -78,7 +89,7 @@
     chart = new ChartJS(ctx, {
       type,
       data,
-      options: { ...defaultOptions, ...options },
+      options: { ...defaultOptions, ...options }
     });
 
     return () => {

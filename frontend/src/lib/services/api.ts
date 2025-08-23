@@ -6,8 +6,8 @@ const API_BASE_URL = 'http://localhost:3000/api';
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
 // Request interceptor to add auth token
@@ -92,14 +92,17 @@ export interface CreateResourceRequest {
 // Auth API
 export const authAPI = {
   login: async (data: LoginRequest) => {
-    const response = await api.post<ApiResponse<{user: User, token: string}>>('/auth/login', data);
+    const response = await api.post<ApiResponse<{ user: User; token: string }>>(
+      '/auth/login',
+      data
+    );
     return response.data;
   },
 
   register: async (data: RegisterRequest) => {
     const response = await api.post<ApiResponse<User>>('/auth/register', data);
     return response.data;
-  },
+  }
 };
 
 // Users API
@@ -127,7 +130,7 @@ export const usersAPI = {
   delete: async (id: number) => {
     const response = await api.delete<ApiResponse<void>>(`/user/${id}`);
     return response.data;
-  },
+  }
 };
 
 // Validation helpers
@@ -136,12 +139,14 @@ export function validateResourceId(id: any): id is number {
 }
 
 export function validateResource(resource: any): resource is Resource {
-  return resource && 
-         typeof resource === 'object' && 
-         validateResourceId(resource.id) &&
-         typeof resource.name === 'string' &&
-         typeof resource.unit === 'string' &&
-         typeof resource.quantity === 'number';
+  return (
+    resource &&
+    typeof resource === 'object' &&
+    validateResourceId(resource.id) &&
+    typeof resource.name === 'string' &&
+    typeof resource.unit === 'string' &&
+    typeof resource.quantity === 'number'
+  );
 }
 
 // Resources API
@@ -174,7 +179,7 @@ export const resourcesAPI = {
   getHistory: async (id: number) => {
     const response = await api.get<ApiResponse<ResourceHistory[]>>(`/resource/${id}/history`);
     return response.data;
-  },
+  }
 };
 
 export default api;

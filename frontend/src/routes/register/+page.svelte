@@ -13,7 +13,7 @@
       notifications.add({
         type: 'warning',
         title: 'Validation Error',
-        message: 'Please fill in all required fields',
+        message: 'Please fill in all required fields'
       });
       return;
     }
@@ -22,7 +22,7 @@
       notifications.add({
         type: 'warning',
         title: 'Validation Error',
-        message: 'Password must be at least 6 characters long',
+        message: 'Password must be at least 6 characters long'
       });
       return;
     }
@@ -34,13 +34,13 @@
         username: username.trim(),
         email: email.trim(),
         password,
-        names: names.trim() || undefined,
+        names: names.trim() || undefined
       });
 
       notifications.add({
         type: 'success',
         title: 'Account Created!',
-        message: 'You can now sign in with your credentials',
+        message: 'You can now sign in with your credentials'
       });
 
       window.location.href = '/login';
@@ -48,7 +48,7 @@
       notifications.add({
         type: 'error',
         title: 'Registration Failed',
-        message: error.response?.data?.message || 'Failed to create account',
+        message: error.response?.data?.message || 'Failed to create account'
       });
     } finally {
       loading = false;
@@ -60,17 +60,31 @@
   <title>Register - Resource Manager</title>
 </svelte:head>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 p-4">
+<div
+  class="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 p-4"
+>
   <div class="card w-full max-w-md bg-base-100 shadow-2xl">
     <div class="card-body">
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-primary-content" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      <div class="mb-8 text-center">
+        <div
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary"
+        >
+          <svg
+            class="h-8 w-8 text-primary-content"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            />
           </svg>
         </div>
         <h2 class="text-2xl font-bold text-base-content">Create Account</h2>
-        <p class="text-base-content/60 mt-2">Join us today</p>
+        <p class="mt-2 text-base-content/60">Join us today</p>
       </div>
 
       <form on:submit|preventDefault={handleRegister} class="space-y-4">
@@ -83,7 +97,7 @@
             type="text"
             bind:value={username}
             placeholder="Enter username"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
             required
           />
@@ -98,7 +112,7 @@
             type="email"
             bind:value={email}
             placeholder="Enter email address"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
             required
           />
@@ -113,7 +127,7 @@
             type="text"
             bind:value={names}
             placeholder="Enter your full name"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
           />
         </div>
@@ -127,7 +141,7 @@
             type="password"
             bind:value={password}
             placeholder="Enter password (min 6 characters)"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
             required
           />
@@ -135,12 +149,12 @@
 
         <button
           type="submit"
-          class="btn btn-primary w-full mt-6"
+          class="btn mt-6 w-full btn-primary"
           class:loading
           disabled={loading || !username.trim() || !email.trim() || !password.trim()}
         >
           {#if loading}
-            <span class="loading loading-spinner loading-sm"></span>
+            <span class="loading loading-sm loading-spinner"></span>
             Creating account...
           {:else}
             Create Account
@@ -152,7 +166,7 @@
 
       <p class="text-center text-sm text-base-content/60">
         Already have an account?
-        <a href="/login" class="link link-primary font-medium">Sign in</a>
+        <a href="/login" class="link font-medium link-primary">Sign in</a>
       </p>
     </div>
   </div>

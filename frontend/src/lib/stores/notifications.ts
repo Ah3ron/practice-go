@@ -16,22 +16,22 @@ const createNotificationStore = () => {
     add: (notification: Omit<Notification, 'id'>) => {
       const id = crypto.randomUUID();
       const newNotification = { ...notification, id };
-      
-      update(notifications => [...notifications, newNotification]);
-      
+
+      update((notifications) => [...notifications, newNotification]);
+
       // Auto remove after duration (default 5 seconds)
       setTimeout(() => {
-        update(notifications => notifications.filter(n => n.id !== id));
+        update((notifications) => notifications.filter((n) => n.id !== id));
       }, notification.duration || 5000);
-      
+
       return id;
     },
     remove: (id: string) => {
-      update(notifications => notifications.filter(n => n.id !== id));
+      update((notifications) => notifications.filter((n) => n.id !== id));
     },
     clear: () => {
       update(() => []);
-    },
+    }
   };
 };
 

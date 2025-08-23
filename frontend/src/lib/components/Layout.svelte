@@ -7,21 +7,21 @@
   import NotificationToast from './NotificationToast.svelte';
 </script>
 
-<div class="drawer lg:drawer-open min-h-screen bg-base-100">
+<div class="drawer min-h-screen bg-base-100 lg:drawer-open">
   <input id="drawer-toggle" type="checkbox" class="drawer-toggle" />
-  
+
   <div class="drawer-content flex flex-col">
     <!-- Navbar -->
     <Navbar />
-    
+
     <!-- Page content -->
-    <main class="flex-1 p-6 overflow-y-auto custom-scrollbar">
-      <div class="max-w-7xl mx-auto">
+    <main class="custom-scrollbar flex-1 overflow-y-auto p-6">
+      <div class="mx-auto max-w-7xl">
         <slot />
       </div>
     </main>
   </div>
-  
+
   <!-- Sidebar -->
   <div class="drawer-side">
     <label for="drawer-toggle" class="drawer-overlay"></label>
@@ -30,7 +30,7 @@
 </div>
 
 <!-- Notifications -->
-<div class="toast toast-top toast-end z-50">
+<div class="toast-top toast-end toast z-50">
   {#each $notifications as notification (notification.id)}
     <NotificationToast {notification} />
   {/each}

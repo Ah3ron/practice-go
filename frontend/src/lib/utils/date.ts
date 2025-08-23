@@ -7,7 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
  */
 export function safeFormatDistanceToNow(dateValue: string | Date | null | undefined): string {
   if (!dateValue) return 'Unknown';
-  
+
   try {
     const date = new Date(dateValue);
     // Check if date is valid
@@ -27,7 +27,7 @@ export function safeFormatDistanceToNow(dateValue: string | Date | null | undefi
  */
 export function safeFormatDate(dateValue: string | Date | null | undefined): string {
   if (!dateValue) return 'Unknown';
-  
+
   try {
     const date = new Date(dateValue);
     if (isNaN(date.getTime())) {
@@ -46,7 +46,7 @@ export function safeFormatDate(dateValue: string | Date | null | undefined): str
  */
 export function isValidDate(dateValue: string | Date | null | undefined): boolean {
   if (!dateValue) return false;
-  
+
   try {
     const date = new Date(dateValue);
     return !isNaN(date.getTime());

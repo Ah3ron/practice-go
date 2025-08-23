@@ -15,7 +15,7 @@ const createAuthStore = () => {
     token: null,
     isAuthenticated: false,
     loading: true,
-    initialized: false,
+    initialized: false
   };
 
   const { subscribe, set, update } = writable<AuthState>(initialState);
@@ -30,7 +30,7 @@ const createAuthStore = () => {
         token,
         isAuthenticated: true,
         loading: false,
-        initialized: true,
+        initialized: true
       };
       set(newState);
     },
@@ -42,16 +42,16 @@ const createAuthStore = () => {
         token: null,
         isAuthenticated: false,
         loading: false,
-        initialized: true,
+        initialized: true
       });
     },
     initialize: () => {
       // Prevent multiple initializations
-      update(state => {
+      update((state) => {
         if (state.initialized) {
           return state;
         }
-        
+
         // Check if we're in browser environment
         if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
           return {
@@ -59,14 +59,14 @@ const createAuthStore = () => {
             token: null,
             isAuthenticated: false,
             loading: false,
-            initialized: true,
+            initialized: true
           };
         }
-        
+
         try {
           const token = localStorage.getItem('token');
           const userStr = localStorage.getItem('user');
-          
+
           if (token && userStr) {
             try {
               const user = JSON.parse(userStr);
@@ -75,7 +75,7 @@ const createAuthStore = () => {
                 token,
                 isAuthenticated: true,
                 loading: false,
-                initialized: true,
+                initialized: true
               };
             } catch (parseError) {
               localStorage.removeItem('token');
@@ -85,7 +85,7 @@ const createAuthStore = () => {
                 token: null,
                 isAuthenticated: false,
                 loading: false,
-                initialized: true,
+                initialized: true
               };
             }
           } else {
@@ -94,7 +94,7 @@ const createAuthStore = () => {
               token: null,
               isAuthenticated: false,
               loading: false,
-              initialized: true,
+              initialized: true
             };
           }
         } catch (storageError) {
@@ -103,14 +103,14 @@ const createAuthStore = () => {
             token: null,
             isAuthenticated: false,
             loading: false,
-            initialized: true,
+            initialized: true
           };
         }
       });
     },
     setLoading: (loading: boolean) => {
-      update(state => ({ ...state, loading }));
-    },
+      update((state) => ({ ...state, loading }));
+    }
   };
 };
 

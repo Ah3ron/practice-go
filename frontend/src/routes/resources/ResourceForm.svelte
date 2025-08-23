@@ -36,7 +36,7 @@
         });
         return;
       }
-      
+
       // Use validation helper function
       if (!validateResourceId(resource.id)) {
         console.error('Resource validation failed:', {
@@ -86,7 +86,8 @@
       notifications.add({
         type: 'error',
         title: isEditing ? 'Update Failed' : 'Creation Failed',
-        message: error.response?.data?.message || `Failed to ${isEditing ? 'update' : 'create'} resource`
+        message:
+          error.response?.data?.message || `Failed to ${isEditing ? 'update' : 'create'} resource`
       });
     } finally {
       loading = false;
@@ -98,14 +99,14 @@
   }
 </script>
 
-<div class="modal modal-open">
+<div class="modal-open modal">
   <div class="modal-box w-11/12 max-w-2xl">
     <form on:submit|preventDefault={handleSubmit}>
-      <h3 class="font-bold text-lg mb-6">
+      <h3 class="mb-6 text-lg font-bold">
         {isEditing ? 'Edit Resource' : 'Create New Resource'}
       </h3>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="form-control col-span-1 md:col-span-2">
           <label class="label" for="name">
             <span class="label-text">Resource Name <span class="text-error">*</span></span>
@@ -115,7 +116,7 @@
             type="text"
             bind:value={name}
             placeholder="Enter resource name"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             class:input-error={!name.trim()}
             disabled={loading}
             required
@@ -131,7 +132,7 @@
             type="text"
             bind:value={unit}
             placeholder="e.g., kg, pcs, liters"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             class:input-error={!unit.trim()}
             disabled={loading}
             required
@@ -147,7 +148,7 @@
             type="number"
             bind:value={quantity}
             placeholder="Enter quantity"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             class:input-error={quantity < 0}
             min="0"
             step="1"
@@ -164,19 +165,14 @@
             id="description"
             bind:value={description}
             placeholder="Enter resource description (optional)"
-            class="textarea textarea-bordered w-full h-20"
+            class="textarea-bordered textarea h-20 w-full"
             disabled={loading}
           ></textarea>
         </div>
       </div>
 
       <div class="modal-action">
-        <button
-          type="button"
-          class="btn btn-ghost"
-          on:click={handleClose}
-          disabled={loading}
-        >
+        <button type="button" class="btn btn-ghost" on:click={handleClose} disabled={loading}>
           Cancel
         </button>
         <button
@@ -186,7 +182,7 @@
           disabled={loading || !name.trim() || !unit.trim() || quantity < 0}
         >
           {#if loading}
-            <span class="loading loading-spinner loading-sm"></span>
+            <span class="loading loading-sm loading-spinner"></span>
             {isEditing ? 'Updating...' : 'Creating...'}
           {:else}
             {isEditing ? 'Update Resource' : 'Create Resource'}

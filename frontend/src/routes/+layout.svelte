@@ -24,15 +24,15 @@
 </script>
 
 <svelte:head>
-  <title>Resource Manager</title>
-  <meta name="description" content="Modern resource management system" />
+  <title>Менеджер ресурсов</title>
+  <meta name="description" content="Современная система управления ресурсами" />
 </svelte:head>
 
 {#if !$auth.initialized}
-  <div class="min-h-screen flex items-center justify-center bg-base-100">
+  <div class="flex min-h-screen items-center justify-center bg-base-100">
     <div class="text-center">
-      <div class="loading loading-spinner loading-lg mb-4"></div>
-      <p class="text-base-content/60">Loading...</p>
+      <div class="loading mb-4 loading-lg loading-spinner"></div>
+      <p class="text-base-content/60">Загрузка...</p>
     </div>
   </div>
 {:else if isAuthPage}
@@ -43,10 +43,10 @@
   </Layout>
 {:else}
   <!-- This will trigger the redirect to login -->
-  <div class="min-h-screen flex items-center justify-center bg-base-100">
+  <div class="flex min-h-screen items-center justify-center bg-base-100">
     <div class="text-center">
-      <div class="loading loading-spinner loading-lg mb-4"></div>
-      <p class="text-base-content/60">Redirecting...</p>
+      <div class="loading mb-4 loading-lg loading-spinner"></div>
+      <p class="text-base-content/60">Перенаправление...</p>
     </div>
   </div>
 {/if}
