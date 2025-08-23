@@ -33,6 +33,14 @@ func ConnectDB() {
 	}
 
 	fmt.Println("Connection Opened to Database")
-	DB.AutoMigrate(&model.Product{}, &model.User{})
+	if err := DB.AutoMigrate(
+		&model.User{},
+		&model.Resource{},
+		&model.ResourceHistory{},
+	); err != nil {
+		panic("auto-migrate failed")
+	}
 	fmt.Println("Database Migrated")
+	SeedData(DB)
+	fmt.Println("Database Seeded")
 }

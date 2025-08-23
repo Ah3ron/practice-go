@@ -1,6 +1,8 @@
 module app
 
-go 1.20
+go 1.23
+
+toolchain go1.23.4
 
 require (
 	github.com/go-playground/validator/v10 v10.26.0
@@ -10,7 +12,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/crypto v0.33.0
 	gorm.io/driver/postgres v1.5.11
-	gorm.io/gorm v1.25.12
+	gorm.io/gorm v1.30.0
 )
 
 require (

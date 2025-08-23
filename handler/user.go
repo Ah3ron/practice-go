@@ -42,6 +42,14 @@ func validUser(id string, p string) bool {
 	return true
 }
 
+// GetAllUsers get all users
+func GetAllUsers(c *fiber.Ctx) error {
+	db := database.DB
+	var users []model.User
+	db.Find(&users)
+	return c.JSON(fiber.Map{"status": "success", "message": "All users", "data": users})
+}
+
 // GetUser get a user
 func GetUser(c *fiber.Ctx) error {
 	id := c.Params("id")
