@@ -40,11 +40,12 @@
   $: overstockCount = (resources || []).filter((r) => (r?.quantity || 0) > 1000).length;
   $: stockValue = calculateStockValue(resources);
   $: stockTurnover = calculateStockTurnover(resources);
-  $: stockCoverage = totalResources > 0 ? Math.round(((totalResources - lowStockCount) / totalResources) * 100) : 0;
+  $: stockCoverage =
+    totalResources > 0 ? Math.round(((totalResources - lowStockCount) / totalResources) * 100) : 0;
 
   function getMedianQuantity(resources: Resource[]): number {
     if (!resources || resources.length === 0) return 0;
-    const sorted = resources.map(r => r.quantity || 0).sort((a, b) => a - b);
+    const sorted = resources.map((r) => r.quantity || 0).sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
     return sorted.length % 2 !== 0 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
   }
@@ -54,19 +55,19 @@
     return resources.reduce((sum, resource) => {
       const quantity = resource?.quantity || 0;
       const estimatedPrice = getEstimatedPrice(resource.unit);
-      return sum + (quantity * estimatedPrice);
+      return sum + quantity * estimatedPrice;
     }, 0);
   }
 
   function getEstimatedPrice(unit: string): number {
     // Estimated prices based on unit types
     const priceMap: Record<string, number> = {
-      'шт': 100,
-      'кг': 50,
-      'л': 30,
-      'м': 25,
-      'упак': 150,
-      'коробка': 200
+      шт: 100,
+      кг: 50,
+      л: 30,
+      м: 25,
+      упак: 150,
+      коробка: 200
     };
     return priceMap[unit] || 75; // Default price
   }
@@ -196,7 +197,7 @@
       <p class="text-base-content/60">Полный анализ управления вашими ресурсами</p>
     </div>
     <div class="mt-4 sm:mt-0">
-      <select bind:value={selectedTimeRange} class="select select-bordered w-full max-w-xs">
+      <select bind:value={selectedTimeRange} class="select-bordered select w-full max-w-xs">
         <option value="7d">7 дней</option>
         <option value="30d" selected>30 дней</option>
         <option value="90d">90 дней</option>

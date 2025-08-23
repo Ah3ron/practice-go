@@ -1,8 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
 
-  $: pathname = $page.url.pathname;
-
   interface MenuItem {
     path: string;
     label: string;
@@ -27,15 +25,16 @@
     }
   ];
 
-  function isActive(itemPath: string): boolean {
+  const isActive = (itemPath: string, currentPath: string): boolean => {
     if (itemPath === '/') {
-      return pathname === '/';
+      return currentPath === '/';
     }
-    return pathname.startsWith(itemPath);
-  }
+    return currentPath.startsWith(itemPath);
+  };
 </script>
 
-<aside class="min-h-full w-64 bg-base-200 text-base-content">
+<aside class="relative min-h-full w-64 bg-base-200 text-base-content">
+  <!-- Header -->
   <div class="p-6">
     <div class="flex items-center space-x-2">
       <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -59,15 +58,14 @@
 
   <nav class="px-3">
     <ul class="menu menu-vertical w-full space-y-1">
-      {#each menuItems as item, index (`menu-${index}`)}
+      {#each menuItems as item, i (i)}
         <li>
           <a
             href={item.path}
-            class="flex items-center space-x-3 rounded-lg px-4 py-3 transition-colors duration-200 {isActive(
-              item.path
-            )
-              ? 'bg-primary text-primary-content'
-              : 'hover:bg-base-300'}"
+            class="flex items-center space-x-3 rounded-lg px-4 py-3 transition-colors duration-200
+                   hover:bg-base-300"
+            class:bg-primary={isActive(item.path, $page.url.pathname)}
+            class:text-primary-content={isActive(item.path, $page.url.pathname)}
           >
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon} />
@@ -82,7 +80,7 @@
   <div class="absolute right-0 bottom-0 left-0 p-6">
     <div class="rounded-lg bg-base-300 p-4 text-center">
       <div class="mb-2 text-sm text-base-content/60">Version 1.0.0</div>
-      <div class="text-xs text-base-content/40">© 2024 Менеджер ресурсов</div>
+      <div class="text-xs text-base-content/40">© 2025 Менеджер ресурсов</div>
     </div>
   </div>
 </aside>

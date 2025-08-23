@@ -7,19 +7,23 @@
   import Layout from '$lib/components/Layout.svelte';
 
   $: isAuthPage = ['/login', '/register'].includes($page.url.pathname);
+  let authInitialized = false;
 
   onMount(() => {
     auth.initialize();
+    authInitialized = true;
   });
 
-  // Redirect to login if not authenticated and not on auth page
-  $: if (!$auth.loading && !$auth.isAuthenticated && !isAuthPage && typeof window !== 'undefined') {
-    goto('/login', { replaceState: true });
-  }
-
-  // Redirect to dashboard if authenticated and on auth page
-  $: if (!$auth.loading && $auth.isAuthenticated && isAuthPage && typeof window !== 'undefined') {
-    goto('/', { replaceState: true });
+  // Only handle redirects after auth is initialized
+  $: if (authInitialized && $auth.initialized) {
+    // Redirect to login if not authenticated and not on auth page
+    if (!$auth.isAuthenticated && !isAuthPage && typeof window !== 'undefined') {
+      goto('/login', { replaceState: true });
+    }
+    // Redirect to dashboard if authenticated and on auth page
+    else if ($auth.isAuthenticated && isAuthPage && typeof window !== 'undefined') {
+      goto('/', { replaceState: true });
+    }
   }
 </script>
 

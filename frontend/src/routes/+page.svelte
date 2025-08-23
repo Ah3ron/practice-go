@@ -61,7 +61,10 @@
       value: lowStockResources,
       icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z',
       color: 'warning',
-      change: lowStockResources > 0 ? '-' + Math.round((lowStockResources / totalResources) * 100) + '%' : '0%',
+      change:
+        lowStockResources > 0
+          ? '-' + Math.round((lowStockResources / totalResources) * 100) + '%'
+          : '0%',
       changeType: lowStockResources > 0 ? 'negative' : 'positive'
     }
   ];
@@ -102,7 +105,9 @@
                   >
                     {stat.change}
                   </span>
-                  <span class="ml-1 text-xs text-base-content/50">по сравнению с прошлым месяцем</span>
+                  <span class="ml-1 text-xs text-base-content/50"
+                    >по сравнению с прошлым месяцем</span
+                  >
                 </div>
               </div>
               <div
@@ -229,7 +234,10 @@
               Посмотреть отчёт
             </a>
 
-            <a href="/resources" class="btn flex items-center justify-start btn-outline btn-secondary">
+            <a
+              href="/resources"
+              class="btn flex items-center justify-start btn-outline btn-secondary"
+            >
               <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"

@@ -7,30 +7,11 @@ import (
 
 	"app/model"
 
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func SeedData(db *gorm.DB) {
 	var count int64
-
-	// --- Users ---
-	db.Model(&model.User{}).Count(&count)
-	if count == 0 {
-		password, _ := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
-
-		users := []model.User{
-			{Username: "admin", Email: "admin@ipr-op.org", Password: string(password), Names: "Администратор"},
-			{Username: "john", Email: "john@ipr-op.org", Password: string(password), Names: "Джон Доу"},
-			{Username: "jane", Email: "jane@ipr-op.org", Password: string(password), Names: "Джейн Смит"},
-		}
-
-		if err := db.Create(&users).Error; err != nil {
-			log.Println("❌ Ошибка при добавлении пользователей:", err)
-		} else {
-			log.Println("✅ Добавлены тестовые пользователи")
-		}
-	}
 
 	// --- Resources ---
 	db.Model(&model.Resource{}).Count(&count)
