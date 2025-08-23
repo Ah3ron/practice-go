@@ -12,8 +12,8 @@
     if (!username.trim() || !email.trim() || !password.trim()) {
       notifications.add({
         type: 'warning',
-        title: 'Validation Error',
-        message: 'Please fill in all required fields'
+        title: 'Ошибка валидации',
+        message: 'Пожалуйста, заполните все обязательные поля'
       });
       return;
     }
@@ -21,8 +21,8 @@
     if (password.length < 6) {
       notifications.add({
         type: 'warning',
-        title: 'Validation Error',
-        message: 'Password must be at least 6 characters long'
+        title: 'Ошибка валидации',
+        message: 'Пароль должен содержать не менее 6 символов'
       });
       return;
     }
@@ -39,16 +39,16 @@
 
       notifications.add({
         type: 'success',
-        title: 'Account Created!',
-        message: 'You can now sign in with your credentials'
+        title: 'Аккаунт создан!',
+        message: 'Теперь вы можете войти в систему'
       });
 
       window.location.href = '/login';
     } catch (error: any) {
       notifications.add({
         type: 'error',
-        title: 'Registration Failed',
-        message: error.response?.data?.message || 'Failed to create account'
+        title: 'Ошибка регистрации',
+        message: error.response?.data?.message || 'Не удалось создать аккаунт'
       });
     } finally {
       loading = false;
@@ -57,7 +57,7 @@
 </script>
 
 <svelte:head>
-  <title>Register - Resource Manager</title>
+  <title>Регистрация - Менеджер ресурсов</title>
 </svelte:head>
 
 <div
@@ -83,20 +83,20 @@
             />
           </svg>
         </div>
-        <h2 class="text-2xl font-bold text-base-content">Create Account</h2>
-        <p class="mt-2 text-base-content/60">Join us today</p>
+        <h2 class="text-2xl font-bold text-base-content">Создать аккаунт</h2>
+        <p class="mt-2 text-base-content/60">Присоединяйтесь к нам сегодня</p>
       </div>
 
       <form on:submit|preventDefault={handleRegister} class="space-y-4">
         <div class="form-control">
           <label class="label" for="username">
-            <span class="label-text">Username <span class="text-error">*</span></span>
+            <span class="label-text">Имя пользователя <span class="text-error">*</span></span>
           </label>
           <input
             id="username"
             type="text"
             bind:value={username}
-            placeholder="Enter username"
+            placeholder="Введите имя пользователя"
             class="input-bordered input w-full"
             disabled={loading}
             required
@@ -111,7 +111,7 @@
             id="email"
             type="email"
             bind:value={email}
-            placeholder="Enter email address"
+            placeholder="Введите адрес электронной почты"
             class="input-bordered input w-full"
             disabled={loading}
             required
@@ -120,13 +120,13 @@
 
         <div class="form-control">
           <label class="label" for="names">
-            <span class="label-text">Full Name</span>
+            <span class="label-text">Полное имя</span>
           </label>
           <input
             id="names"
             type="text"
             bind:value={names}
-            placeholder="Enter your full name"
+            placeholder="Введите ваше полное имя"
             class="input-bordered input w-full"
             disabled={loading}
           />
@@ -134,13 +134,13 @@
 
         <div class="form-control">
           <label class="label" for="password">
-            <span class="label-text">Password <span class="text-error">*</span></span>
+            <span class="label-text">Пароль <span class="text-error">*</span></span>
           </label>
           <input
             id="password"
             type="password"
             bind:value={password}
-            placeholder="Enter password (min 6 characters)"
+            placeholder="Введите пароль (мин. 6 символов)"
             class="input-bordered input w-full"
             disabled={loading}
             required
@@ -155,18 +155,18 @@
         >
           {#if loading}
             <span class="loading loading-sm loading-spinner"></span>
-            Creating account...
+            Создание аккаунта...
           {:else}
-            Create Account
+            Создать аккаунт
           {/if}
         </button>
       </form>
 
-      <div class="divider">or</div>
+      <div class="divider">или</div>
 
       <p class="text-center text-sm text-base-content/60">
-        Already have an account?
-        <a href="/login" class="link font-medium link-primary">Sign in</a>
+        Уже есть аккаунт?
+        <a href="/login" class="link font-medium link-primary">Войти</a>
       </p>
     </div>
   </div>

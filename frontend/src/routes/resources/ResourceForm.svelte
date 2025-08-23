@@ -20,8 +20,8 @@
     if (!name.trim() || !unit.trim() || quantity < 0) {
       notifications.add({
         type: 'warning',
-        title: 'Validation Error',
-        message: 'Please fill in all required fields with valid values'
+        title: 'Ошибка валидации',
+        message: 'Пожалуйста, заполните все обязательные поля корректными значениями'
       });
       return;
     }
@@ -31,8 +31,8 @@
       if (!resource) {
         notifications.add({
           type: 'error',
-          title: 'Invalid Resource',
-          message: 'Cannot update resource: Resource object is null'
+          title: 'Неверный ресурс',
+          message: 'Не удалось обновить ресурс: Объект ресурса нулевой'
         });
         return;
       }
@@ -48,8 +48,8 @@
         });
         notifications.add({
           type: 'error',
-          title: 'Invalid Resource',
-          message: `Cannot update resource: ID is invalid (${resource.id}, type: ${typeof resource.id})`
+          title: 'Неверный ресурс',
+          message: `Не удалось обновить ресурс: Неверный ID (${resource.id}, тип: ${typeof resource.id})`
         });
         return;
       }
@@ -69,15 +69,15 @@
         await resourcesAPI.update(resource.id, resourceData);
         notifications.add({
           type: 'success',
-          title: 'Resource Updated',
-          message: `"${name}" has been updated successfully`
+          title: 'Ресурс обновлён',
+          message: `"${name}" был успешно обновлён`
         });
       } else {
         await resourcesAPI.create(resourceData);
         notifications.add({
           type: 'success',
-          title: 'Resource Created',
-          message: `"${name}" has been created successfully`
+          title: 'Ресурс создан',
+          message: `"${name}" был успешно создан`
         });
       }
 
@@ -85,9 +85,9 @@
     } catch (error: any) {
       notifications.add({
         type: 'error',
-        title: isEditing ? 'Update Failed' : 'Creation Failed',
+        title: isEditing ? 'Ошибка обновления' : 'Ошибка создания',
         message:
-          error.response?.data?.message || `Failed to ${isEditing ? 'update' : 'create'} resource`
+          error.response?.data?.message || `Не удалось ${isEditing ? 'обновить' : 'создать'} ресурс`
       });
     } finally {
       loading = false;
@@ -103,19 +103,19 @@
   <div class="modal-box w-11/12 max-w-2xl">
     <form on:submit|preventDefault={handleSubmit}>
       <h3 class="mb-6 text-lg font-bold">
-        {isEditing ? 'Edit Resource' : 'Create New Resource'}
+        {isEditing ? 'Редактировать ресурс' : 'Создать новый ресурс'}
       </h3>
 
       <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="form-control col-span-1 md:col-span-2">
           <label class="label" for="name">
-            <span class="label-text">Resource Name <span class="text-error">*</span></span>
+            <span class="label-text">Название ресурса <span class="text-error">*</span></span>
           </label>
           <input
             id="name"
             type="text"
             bind:value={name}
-            placeholder="Enter resource name"
+            placeholder="Введите название ресурса"
             class="input-bordered input w-full"
             class:input-error={!name.trim()}
             disabled={loading}
@@ -125,13 +125,13 @@
 
         <div class="form-control">
           <label class="label" for="unit">
-            <span class="label-text">Unit <span class="text-error">*</span></span>
+            <span class="label-text">Единица измерения <span class="text-error">*</span></span>
           </label>
           <input
             id="unit"
             type="text"
             bind:value={unit}
-            placeholder="e.g., kg, pcs, liters"
+            placeholder="например: кг, шт, литры"
             class="input-bordered input w-full"
             class:input-error={!unit.trim()}
             disabled={loading}
@@ -141,13 +141,13 @@
 
         <div class="form-control">
           <label class="label" for="quantity">
-            <span class="label-text">Quantity <span class="text-error">*</span></span>
+            <span class="label-text">Количество <span class="text-error">*</span></span>
           </label>
           <input
             id="quantity"
             type="number"
             bind:value={quantity}
-            placeholder="Enter quantity"
+            placeholder="Введите количество"
             class="input-bordered input w-full"
             class:input-error={quantity < 0}
             min="0"
@@ -159,12 +159,12 @@
 
         <div class="form-control col-span-1 md:col-span-2">
           <label class="label" for="description">
-            <span class="label-text">Description</span>
+            <span class="label-text">Описание</span>
           </label>
           <textarea
             id="description"
             bind:value={description}
-            placeholder="Enter resource description (optional)"
+            placeholder="Введите описание ресурса (необязательно)"
             class="textarea-bordered textarea h-20 w-full"
             disabled={loading}
           ></textarea>
@@ -173,7 +173,7 @@
 
       <div class="modal-action">
         <button type="button" class="btn btn-ghost" on:click={handleClose} disabled={loading}>
-          Cancel
+          Отмена
         </button>
         <button
           type="submit"
@@ -183,9 +183,9 @@
         >
           {#if loading}
             <span class="loading loading-sm loading-spinner"></span>
-            {isEditing ? 'Updating...' : 'Creating...'}
+            {isEditing ? 'Обновление...' : 'Создание...'}
           {:else}
-            {isEditing ? 'Update Resource' : 'Create Resource'}
+            {isEditing ? 'Обновить ресурс' : 'Создать ресурс'}
           {/if}
         </button>
       </div>

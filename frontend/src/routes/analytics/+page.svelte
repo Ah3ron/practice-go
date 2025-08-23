@@ -1,66 +1,146 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { resourcesAPI, usersAPI } from '$lib/services/api';
+  import { resourcesAPI } from '$lib/services/api';
   import { notifications } from '$lib/stores/notifications';
-  import type { Resource, User } from '$lib/services/api';
+  import type { Resource } from '$lib/services/api';
   import Chart from '$lib/components/Chart.svelte';
 
   let resources: Resource[] = [];
-  let users: User[] = [];
   let loading = true;
+  let selectedTimeRange = '30d';
 
   onMount(loadData);
 
   async function loadData() {
     loading = true;
     try {
-      const [resourcesResponse, usersResponse] = await Promise.all([
-        resourcesAPI.getAll(),
-        usersAPI.getAll()
-      ]);
-
+      const resourcesResponse = await resourcesAPI.getAll();
       resources = resourcesResponse.data;
-      users = usersResponse.data;
     } catch (error: any) {
       notifications.add({
         type: 'error',
-        title: 'Error Loading Analytics',
-        message: error.response?.data?.message || 'Failed to load analytics data'
+        title: 'Ошибка загрузки аналитики',
+        message: error.response?.data?.message || 'Не удалось загрузить данные аналитики'
       });
     } finally {
       loading = false;
     }
   }
 
-  // Analytics calculations with safe handling
+  // Advanced analytics calculations
   $: totalResources = resources?.length || 0;
   $: totalQuantity = (resources || []).reduce((sum, resource) => {
     const quantity = resource?.quantity || 0;
     return sum + (typeof quantity === 'number' ? quantity : 0);
   }, 0);
   $: averageQuantity = totalResources > 0 ? Math.round(totalQuantity / totalResources) : 0;
+  $: medianQuantity = getMedianQuantity(resources);
   $: lowStockCount = (resources || []).filter((r) => (r?.quantity || 0) < 100).length;
-  $: highStockCount = (resources || []).filter((r) => (r?.quantity || 0) >= 500).length;
+  $: criticalStockCount = (resources || []).filter((r) => (r?.quantity || 0) < 50).length;
+  $: overstockCount = (resources || []).filter((r) => (r?.quantity || 0) > 1000).length;
+  $: stockValue = calculateStockValue(resources);
+  $: stockTurnover = calculateStockTurnover(resources);
+  $: stockCoverage = totalResources > 0 ? Math.round(((totalResources - lowStockCount) / totalResources) * 100) : 0;
 
-  // Chart data
+  function getMedianQuantity(resources: Resource[]): number {
+    if (!resources || resources.length === 0) return 0;
+    const sorted = resources.map(r => r.quantity || 0).sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 !== 0 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+  }
+
+  function calculateStockValue(resources: Resource[]): number {
+    // Simulated stock value calculation (quantity * assumed price per unit)
+    return resources.reduce((sum, resource) => {
+      const quantity = resource?.quantity || 0;
+      const estimatedPrice = getEstimatedPrice(resource.unit);
+      return sum + (quantity * estimatedPrice);
+    }, 0);
+  }
+
+  function getEstimatedPrice(unit: string): number {
+    // Estimated prices based on unit types
+    const priceMap: Record<string, number> = {
+      'шт': 100,
+      'кг': 50,
+      'л': 30,
+      'м': 25,
+      'упак': 150,
+      'коробка': 200
+    };
+    return priceMap[unit] || 75; // Default price
+  }
+
+  function calculateStockTurnover(resources: Resource[]): number {
+    // Simulated stock turnover calculation
+    if (totalQuantity === 0) return 0;
+    const averageDailyUsage = Math.round(totalQuantity * 0.02); // 2% daily usage assumption
+    return averageDailyUsage > 0 ? Math.round(totalQuantity / averageDailyUsage) : 0;
+  }
+
+  // Enhanced chart data
   $: resourceQuantityData = {
     labels: resources.slice(0, 10).map((r) => r.name),
     datasets: [
       {
-        label: 'Quantity',
+        label: 'Количество',
         data: resources.slice(0, 10).map((r) => r.quantity),
         backgroundColor: 'rgba(59, 130, 246, 0.8)',
         borderColor: 'rgba(59, 130, 246, 1)',
-        borderWidth: 1
+        borderWidth: 2,
+        borderRadius: 4
       }
     ]
   };
 
-  $: resourceUnitsData = {
+  $: resourcesDistributionData = {
+    labels: resources.slice(0, 8).map((r) => r.name),
+    datasets: [
+      {
+        data: resources.slice(0, 8).map((r) => r.quantity || 0),
+        backgroundColor: [
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(16, 185, 129, 0.8)',
+          'rgba(245, 158, 11, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
+          'rgba(139, 92, 246, 0.8)',
+          'rgba(236, 72, 153, 0.8)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(168, 85, 247, 0.8)'
+        ],
+        borderWidth: 2,
+        borderColor: 'rgba(255, 255, 255, 1)'
+      }
+    ]
+  };
+
+  $: resourceTrendsData = {
+    labels: resources.slice(0, 8).map((r) => r.name),
+    datasets: [
+      {
+        label: 'Текущий запас',
+        data: resources.slice(0, 8).map((r) => r.quantity),
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 2,
+        fill: true
+      },
+      {
+        label: 'Рекомендуемый запас',
+        data: resources.slice(0, 8).map((r) => Math.max(r.quantity * 1.2, 150)),
+        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+        borderColor: 'rgba(16, 185, 129, 1)',
+        borderWidth: 2,
+        fill: false
+      }
+    ]
+  };
+
+  $: unitDistributionData = {
     labels: [...new Set(resources.map((r) => r.unit))],
     datasets: [
       {
-        label: 'Count by Unit',
+        label: 'Количество ресурсов',
         data: [...new Set(resources.map((r) => r.unit))].map(
           (unit) => resources.filter((r) => r.unit === unit).length
         ),
@@ -72,211 +152,109 @@
           'rgba(139, 92, 246, 0.8)',
           'rgba(236, 72, 153, 0.8)'
         ],
-        borderWidth: 0
+        borderWidth: 2
       }
     ]
   };
 
-  $: stockStatusData = {
-    labels: ['Low Stock (<100)', 'Normal Stock (100-499)', 'High Stock (≥500)'],
-    datasets: [
-      {
-        data: [
-          lowStockCount,
-          resources.filter((r) => r.quantity >= 100 && r.quantity < 500).length,
-          highStockCount
-        ],
-        backgroundColor: [
-          'rgba(245, 158, 11, 0.8)',
-          'rgba(16, 185, 129, 0.8)',
-          'rgba(59, 130, 246, 0.8)'
-        ],
-        borderWidth: 0
-      }
-    ]
-  };
-
-  const kpiCards = [
+  const insightCards = [
     {
-      title: 'Total Resources',
-      value: totalResources,
-      change: '+12%',
-      changeType: 'positive',
-      icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'
+      title: 'Медианное количество',
+      value: medianQuantity,
+      description: 'Средний показатель запасов',
+      icon: 'M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18'
     },
     {
-      title: 'Total Quantity',
-      value: typeof totalQuantity === 'number' ? totalQuantity.toLocaleString() : '0',
-      change: '+8%',
-      changeType: 'positive',
-      icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
+      title: 'Оборачиваемость запасов',
+      value: `${stockTurnover} дней`,
+      description: 'Примерное время полного оборота',
+      icon: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
     },
     {
-      title: 'Average Quantity',
-      value: typeof averageQuantity === 'number' ? averageQuantity.toLocaleString() : '0',
-      change: '+5%',
-      changeType: 'positive',
-      icon: 'M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z'
+      title: 'Типы единиц измерения',
+      value: [...new Set(resources.map((r) => r.unit))].length,
+      description: 'Различных единиц измерения',
+      icon: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01'
     },
     {
-      title: 'Low Stock Items',
-      value: lowStockCount,
-      change: '-15%',
-      changeType: 'negative',
-      icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z'
+      title: 'Избыточные запасы',
+      value: overstockCount,
+      description: 'Ресурсы с количеством >1000',
+      icon: 'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11'
     }
   ];
 </script>
 
 <svelte:head>
-  <title>Analytics - Resource Manager</title>
+  <title>Аналитика - Менеджер ресурсов</title>
 </svelte:head>
 
 <div class="fade-in">
-  <div class="mb-8">
-    <h1 class="mb-2 text-3xl font-bold text-base-content">Analytics Dashboard</h1>
-    <p class="text-base-content/60">Comprehensive insights into your resource management</p>
+  <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="mb-2 text-3xl font-bold text-base-content">Панель аналитики</h1>
+      <p class="text-base-content/60">Полный анализ управления вашими ресурсами</p>
+    </div>
+    <div class="mt-4 sm:mt-0">
+      <select bind:value={selectedTimeRange} class="select select-bordered w-full max-w-xs">
+        <option value="7d">7 дней</option>
+        <option value="30d" selected>30 дней</option>
+        <option value="90d">90 дней</option>
+        <option value="1y">1 год</option>
+      </select>
+    </div>
   </div>
 
   {#if loading}
     <div class="flex items-center justify-center py-12">
       <div class="loading loading-lg loading-spinner"></div>
-      <span class="ml-3 text-base-content/60">Loading analytics...</span>
+      <span class="ml-3 text-base-content/60">Загрузка аналитики...</span>
     </div>
   {:else}
-    <!-- KPI Cards -->
-    <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {#each kpiCards as kpi, index (`kpi-${index}`)}
-        <div class="card-hover card border border-base-200 bg-base-100 shadow-sm">
-          <div class="card-body p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-base-content/60">{kpi.title}</p>
-                <p class="mt-1 text-2xl font-bold text-base-content">{kpi.value}</p>
-                <div class="mt-2 flex items-center">
-                  <span
-                    class="text-xs font-medium {kpi.changeType === 'positive'
-                      ? 'text-success'
-                      : 'text-error'}"
-                  >
-                    {kpi.change}
-                  </span>
-                  <span class="ml-1 text-xs text-base-content/50">vs last month</span>
-                </div>
-              </div>
-              <div
-                class="bg-opacity-10 flex h-12 w-12 items-center justify-center rounded-lg bg-primary"
-              >
-                <svg
-                  class="h-6 w-6 text-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d={kpi.icon}
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      {/each}
-    </div>
-
     <!-- Charts Grid -->
     <div class="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <!-- Resource Quantities Chart -->
+      <!-- Resource Trends Chart -->
       <div class="card border border-base-200 bg-base-100 shadow-sm">
         <div class="card-body">
-          <h2 class="mb-4 card-title">Top Resources by Quantity</h2>
+          <h2 class="mb-4 card-title">Тренды запасов ресурсов</h2>
+          {#if resources.length > 0}
+            <Chart type="line" data={resourceTrendsData} />
+          {:else}
+            <div class="py-8 text-center">
+              <p class="text-base-content/60">Нет доступных ресурсов</p>
+            </div>
+          {/if}
+        </div>
+      </div>
+
+      <!-- Resources Distribution Chart -->
+      <div class="card border border-base-200 bg-base-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="mb-4 card-title">Распределение ресурсов</h2>
+          {#if resources.length > 0}
+            <Chart type="pie" data={resourcesDistributionData} />
+          {:else}
+            <div class="py-8 text-center">
+              <p class="text-base-content/60">Нет доступных ресурсов</p>
+            </div>
+          {/if}
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Charts -->
+    <div class="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <!-- Top Resources Chart -->
+      <div class="card border border-base-200 bg-base-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="mb-4 card-title">Топ ресурсов по количеству</h2>
           {#if resources.length > 0}
             <Chart type="bar" data={resourceQuantityData} />
           {:else}
             <div class="py-8 text-center">
-              <p class="text-base-content/60">No resources available</p>
+              <p class="text-base-content/60">Нет доступных ресурсов</p>
             </div>
           {/if}
-        </div>
-      </div>
-
-      <!-- Stock Status Chart -->
-      <div class="card border border-base-200 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="mb-4 card-title">Stock Status Distribution</h2>
-          {#if resources.length > 0}
-            <Chart type="doughnut" data={stockStatusData} />
-          {:else}
-            <div class="py-8 text-center">
-              <p class="text-base-content/60">No resources available</p>
-            </div>
-          {/if}
-        </div>
-      </div>
-    </div>
-
-    <!-- Resource Units Chart -->
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <div class="card border border-base-200 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="mb-4 card-title">Resources by Unit Type</h2>
-          {#if resources.length > 0}
-            <Chart type="pie" data={resourceUnitsData} />
-          {:else}
-            <div class="py-8 text-center">
-              <p class="text-base-content/60">No resources available</p>
-            </div>
-          {/if}
-        </div>
-      </div>
-
-      <!-- Summary Statistics -->
-      <div class="card border border-base-200 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="mb-4 card-title">Summary Statistics</h2>
-
-          <div class="space-y-4">
-            <div class="flex items-center justify-between rounded-lg bg-base-200 p-4">
-              <div>
-                <div class="font-medium text-base-content">Total Users</div>
-                <div class="text-sm text-base-content/60">Registered users</div>
-              </div>
-              <div class="text-2xl font-bold text-primary">{users.length}</div>
-            </div>
-
-            <div class="flex items-center justify-between rounded-lg bg-base-200 p-4">
-              <div>
-                <div class="font-medium text-base-content">Unique Units</div>
-                <div class="text-sm text-base-content/60">Different measurement units</div>
-              </div>
-              <div class="text-2xl font-bold text-secondary">
-                {[...new Set(resources.map((r) => r.unit))].length}
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between rounded-lg bg-base-200 p-4">
-              <div>
-                <div class="font-medium text-base-content">High Stock Items</div>
-                <div class="text-sm text-base-content/60">Items with ≥500 quantity</div>
-              </div>
-              <div class="text-2xl font-bold text-success">{highStockCount}</div>
-            </div>
-
-            <div class="flex items-center justify-between rounded-lg bg-base-200 p-4">
-              <div>
-                <div class="font-medium text-base-content">Stock Coverage</div>
-                <div class="text-sm text-base-content/60">Percentage well-stocked</div>
-              </div>
-              <div class="text-2xl font-bold text-accent">
-                {totalResources > 0
-                  ? Math.round(((totalResources - lowStockCount) / totalResources) * 100)
-                  : 0}%
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
