@@ -96,7 +96,7 @@
             bind:value={username}
             on:keypress={handleKeyPress}
             placeholder="Введите ваше имя пользователя"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             class:input-error={!username.trim() && loading}
             disabled={loading}
             required
@@ -113,7 +113,7 @@
             bind:value={password}
             on:keypress={handleKeyPress}
             placeholder="Введите ваш пароль"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             class:input-error={!password.trim() && loading}
             disabled={loading}
             required
@@ -122,12 +122,12 @@
 
         <button
           type="submit"
-          class="btn btn-primary w-full mt-6"
+          class="btn mt-6 w-full btn-primary"
           class:loading
           disabled={loading || !username.trim() || !password.trim()}
         >
           {#if loading}
-            <span class="loading loading-spinner loading-sm"></span>
+            <span class="loading loading-sm loading-spinner"></span>
             Вход...
           {:else}
             Войти

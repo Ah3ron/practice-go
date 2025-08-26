@@ -1,11 +1,6 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "daisyui" {
   themes: cupcake --default;
-  root: ":root";
-  include: ;
-  exclude: ;
-  prefix: ;
-  logs: true;
 }
 
 /* Custom scrollbar styles */
@@ -48,10 +43,14 @@
 }
 
 .card-hover {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px oklch(var(--bc) / 0.1), 0 8px 10px -6px oklch(var(--bc) / 0.1);
+  box-shadow:
+    0 10px 25px -5px oklch(var(--bc) / 0.1),
+    0 8px 10px -6px oklch(var(--bc) / 0.1);
 }

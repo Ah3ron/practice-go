@@ -30,7 +30,7 @@
 </div>
 
 <!-- Notifications -->
-<div class="toast toast-top toast-end z-50">
+<div class="toast-top toast-end toast z-50">
   {#each $notifications as notification (notification.id)}
     <NotificationToast {notification} />
   {/each}

@@ -97,7 +97,7 @@
             type="text"
             bind:value={username}
             placeholder="Введите имя пользователя"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
             required
           />
@@ -112,7 +112,7 @@
             type="email"
             bind:value={email}
             placeholder="Введите адрес электронной почты"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
             required
           />
@@ -127,7 +127,7 @@
             type="text"
             bind:value={names}
             placeholder="Введите ваше полное имя"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
           />
         </label>
@@ -141,7 +141,7 @@
             type="password"
             bind:value={password}
             placeholder="Введите пароль (мин. 6 символов)"
-            class="input input-bordered w-full"
+            class="input-bordered input w-full"
             disabled={loading}
             required
           />
@@ -149,12 +149,12 @@
 
         <button
           type="submit"
-          class="btn btn-primary w-full mt-6"
+          class="btn mt-6 w-full btn-primary"
           class:loading
           disabled={loading || !username.trim() || !email.trim() || !password.trim()}
         >
           {#if loading}
-            <span class="loading loading-spinner loading-sm"></span>
+            <span class="loading loading-sm loading-spinner"></span>
             Создание аккаунта...
           {:else}
             Создать аккаунт

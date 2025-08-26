@@ -106,6 +106,6 @@
   }
 </script>
 
-<div class="chart-container">
+<div class="chart-container h-full">
   <canvas bind:this={canvas}></canvas>
 </div>

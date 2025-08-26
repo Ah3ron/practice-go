@@ -197,7 +197,7 @@
       <p class="text-base-content/60">Полный анализ управления вашими ресурсами</p>
     </div>
     <div class="mt-4 sm:mt-0">
-      <select bind:value={selectedTimeRange} class="select select-bordered w-full max-w-xs">
+      <select bind:value={selectedTimeRange} class="select-bordered select w-full max-w-xs">
         <option value="7d">7 дней</option>
         <option value="30d" selected>30 дней</option>
         <option value="90d">90 дней</option>
@@ -207,57 +207,71 @@
   </div>
 
   {#if loading}
-    <div class="flex items-center justify-center py-12">
+    <div class="flex items-center justify-center" style="height: calc(100vh - 280px);">
       <div class="loading loading-lg loading-spinner"></div>
       <span class="ml-3 text-base-content/60">Загрузка аналитики...</span>
     </div>
   {:else}
-    <!-- Charts Grid -->
-    <div class="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <!-- Resource Trends Chart -->
-      <div class="card border border-base-200 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="mb-4 card-title">Тренды запасов ресурсов</h2>
-          {#if resources.length > 0}
-            <Chart type="line" data={resourceTrendsData} />
-          {:else}
-            <div class="py-8 text-center">
-              <p class="text-base-content/60">Нет доступных ресурсов</p>
+    <!-- Main Charts Layout -->
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3" style="height: calc(100vh - 280px);">
+      <!-- Left Column: Two Charts Stacked -->
+      <div class="flex flex-col space-y-8 lg:col-span-2">
+        <!-- Resource Trends Chart -->
+        <div class="card flex-1 border border-base-200 bg-base-100 shadow-sm">
+          <div class="card-body flex h-full flex-col">
+            <h2 class="mb-4 card-title">Тренды запасов ресурсов</h2>
+            <div class="min-h-0 flex-1">
+              {#if resources.length > 0}
+                <Chart type="line" data={resourceTrendsData} />
+              {:else}
+                <div class="flex h-full items-center justify-center">
+                  <p class="text-base-content/60">Нет доступных ресурсов</p>
+                </div>
+              {/if}
             </div>
-          {/if}
+          </div>
+        </div>
+
+        <!-- Top Resources Chart -->
+        <div class="card flex-1 border border-base-200 bg-base-100 shadow-sm">
+          <div class="card-body flex h-full flex-col">
+            <h2 class="mb-4 card-title">Топ ресурсов по количеству</h2>
+            <div class="min-h-0 flex-1">
+              {#if resources.length > 0}
+                <Chart type="bar" data={resourceQuantityData} />
+              {:else}
+                <div class="flex h-full items-center justify-center">
+                  <p class="text-base-content/60">Нет доступных ресурсов</p>
+                </div>
+              {/if}
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Resources Distribution Chart -->
-      <div class="card border border-base-200 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="mb-4 card-title">Распределение ресурсов</h2>
-          {#if resources.length > 0}
-            <Chart type="pie" data={resourcesDistributionData} />
-          {:else}
-            <div class="py-8 text-center">
-              <p class="text-base-content/60">Нет доступных ресурсов</p>
+      <!-- Right Column: Pie Chart -->
+      <div class="lg:col-span-1">
+        <div class="card h-full border border-base-200 bg-base-100 shadow-sm">
+          <div class="card-body flex flex-col">
+            <h2 class="mb-4 card-title">Распределение ресурсов</h2>
+            <div class="min-h-0 flex-1">
+              {#if resources.length > 0}
+                <Chart type="pie" data={resourcesDistributionData} />
+              {:else}
+                <div class="flex h-full items-center justify-center">
+                  <p class="text-base-content/60">Нет доступных ресурсов</p>
+                </div>
+              {/if}
             </div>
-          {/if}
-        </div>
-      </div>
-    </div>
-
-    <!-- Secondary Charts -->
-    <div class="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <!-- Top Resources Chart -->
-      <div class="card border border-base-200 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="mb-4 card-title">Топ ресурсов по количеству</h2>
-          {#if resources.length > 0}
-            <Chart type="bar" data={resourceQuantityData} />
-          {:else}
-            <div class="py-8 text-center">
-              <p class="text-base-content/60">Нет доступных ресурсов</p>
-            </div>
-          {/if}
+          </div>
         </div>
       </div>
     </div>
   {/if}
 </div>
+
+<style>
+  :global(main) {
+    padding-bottom: 0;
+  }
+</style>

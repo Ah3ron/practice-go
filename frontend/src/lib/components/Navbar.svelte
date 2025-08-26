@@ -54,7 +54,7 @@
   <div class="flex-none">
     {#if $auth.isAuthenticated}
       <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        <div tabindex="0" role="button" class="btn avatar btn-circle btn-ghost">
           <div
             class="flex w-10 items-center justify-center rounded-full bg-primary text-primary-content"
           >
@@ -66,7 +66,7 @@
 
         <ul
           tabindex="0"
-          class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-base-200"
+          class="dropdown-content menu z-[1] w-52 rounded-box border border-base-200 bg-base-100 p-2 shadow"
         >
           <li class="menu-title">
             <span class="text-base-content/60">

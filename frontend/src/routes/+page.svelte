@@ -209,7 +209,7 @@
                 />
               </svg>
               <p class="text-base-content/60">Ресурсы не найдены</p>
-              <a href="/resources" class="btn btn-sm btn-primary mt-2">Добавить ресурс</a>
+              <a href="/resources" class="btn mt-2 btn-sm btn-primary">Добавить ресурс</a>
             </div>
           {:else}
             <div class="space-y-3">
@@ -246,7 +246,10 @@
           <h2 class="mb-4 card-title">Быстрые действия</h2>
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <a href="/resources" class="btn btn-outline btn-primary flex items-center justify-start">
+            <a
+              href="/resources"
+              class="btn flex items-center justify-start btn-outline btn-primary"
+            >
               <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -258,7 +261,7 @@
               Добавить ресурс
             </a>
 
-            <a href="/analytics" class="btn btn-outline btn-accent flex items-center justify-start">
+            <a href="/analytics" class="btn flex items-center justify-start btn-outline btn-accent">
               <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -270,7 +273,7 @@
               Посмотреть аналитику
             </a>
 
-            <a href="/resources" class="btn btn-outline btn-info flex items-center justify-start">
+            <a href="/resources" class="btn flex items-center justify-start btn-outline btn-info">
               <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -282,7 +285,10 @@
               Посмотреть отчёт
             </a>
 
-            <a href="/resources" class="btn btn-outline btn-secondary flex items-center justify-start">
+            <a
+              href="/resources"
+              class="btn flex items-center justify-start btn-outline btn-secondary"
+            >
               <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
