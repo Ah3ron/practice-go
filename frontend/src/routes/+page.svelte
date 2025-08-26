@@ -9,12 +9,21 @@
   let loading = true;
 
   $: totalResources = resources?.length || 0;
-  $: totalQuantity = (resources || []).reduce((sum, resource) => {
-    const quantity = resource?.quantity || 0;
-    return sum + (typeof quantity === 'number' ? quantity : 0);
-  }, 0);
   $: lowStockResources = (resources || []).filter((r) => (r?.quantity || 0) < 100).length;
-  $: averageQuantity = totalResources > 0 ? Math.round(totalQuantity / totalResources) : 0;
+  $: recentResources = resources.slice(-3).reverse(); // Last 3 resources added
+
+  // Get current date and time
+  const currentDate = new Date();
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit'
+  };
 
   onMount(async () => {
     try {
@@ -30,44 +39,6 @@
       loading = false;
     }
   });
-
-  const stats = [
-    {
-      title: 'Общее количество ресурсов',
-      value: totalResources,
-      icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
-      color: 'primary',
-      change: totalResources > 0 ? '+' + Math.round((totalResources / 10) * 100) + '%' : '0%',
-      changeType: 'positive'
-    },
-    {
-      title: 'Общее количество единиц',
-      value: typeof totalQuantity === 'number' ? totalQuantity : '0',
-      icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
-      color: 'secondary',
-      change: totalQuantity > 0 ? '+' + Math.round((totalQuantity / 100) * 10) + '%' : '0%',
-      changeType: 'positive'
-    },
-    {
-      title: 'Среднее количество',
-      value: averageQuantity,
-      icon: 'M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z',
-      color: 'accent',
-      change: averageQuantity > 50 ? '+' + Math.round(averageQuantity / 10) + '%' : '0%',
-      changeType: averageQuantity > 50 ? 'positive' : 'neutral'
-    },
-    {
-      title: 'Низкий остаток',
-      value: lowStockResources,
-      icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z',
-      color: 'warning',
-      change:
-        lowStockResources > 0
-          ? '-' + Math.round((lowStockResources / totalResources) * 100) + '%'
-          : '0%',
-      changeType: lowStockResources > 0 ? 'negative' : 'positive'
-    }
-  ];
 </script>
 
 <svelte:head>
@@ -88,33 +59,82 @@
       <span class="ml-3 text-base-content/60">Загрузка панели управления...</span>
     </div>
   {:else}
-    <!-- Stats Cards -->
-    <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {#each stats as stat, index (`stat-${stat.title}-${index}`)}
-        <div class="card-hover card border border-base-200 bg-base-100 shadow-sm">
-          <div class="card-body p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-base-content/60">{stat.title}</p>
-                <p class="mt-1 text-2xl font-bold text-base-content">{stat.value}</p>
-                <div class="mt-2 flex items-center">
-                  <span
-                    class="text-xs font-medium {stat.changeType === 'positive'
-                      ? 'text-success'
-                      : 'text-error'}"
-                  >
-                    {stat.change}
-                  </span>
-                  <span class="ml-1 text-xs text-base-content/50"
-                    >по сравнению с прошлым месяцем</span
-                  >
-                </div>
-              </div>
-              <div
-                class="h-12 w-12 bg-{stat.color} bg-opacity-10 flex items-center justify-center rounded-lg"
+    <!-- Dashboard Overview -->
+    <div class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <!-- System Status -->
+      <div class="card border border-base-200 bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-center">
+            <div
+              class="bg-opacity-10 flex h-12 w-12 items-center justify-center rounded-lg bg-success"
+            >
+              <svg
+                class="h-6 w-6 text-success"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-sm font-medium text-base-content/60">Статус системы</h3>
+              <p class="text-lg font-semibold text-success">Система работает</p>
+              <p class="text-xs text-base-content/50">
+                {currentDate.toLocaleDateString('ru-RU', dateOptions)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resource Summary -->
+      <div class="card border border-base-200 bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-center">
+            <div
+              class="bg-opacity-10 flex h-12 w-12 items-center justify-center rounded-lg bg-primary"
+            >
+              <svg
+                class="h-6 w-6 text-primary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-sm font-medium text-base-content/60">Всего ресурсов</h3>
+              <p class="text-lg font-semibold text-base-content">{totalResources}</p>
+              <p class="text-xs text-base-content/50">активных в системе</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="card border border-base-200 bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-center">
+            <div
+              class="h-12 w-12 bg-{lowStockResources > 0
+                ? 'warning'
+                : 'success'} bg-opacity-10 flex items-center justify-center rounded-lg"
+            >
+              {#if lowStockResources > 0}
                 <svg
-                  class="h-6 w-6 text-{stat.color}"
+                  class="h-6 w-6 text-warning"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -123,14 +143,45 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d={stat.icon}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"
                   />
                 </svg>
-              </div>
+              {:else}
+                <svg
+                  class="h-6 w-6 text-success"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              {/if}
+            </div>
+            <div class="ml-4">
+              <h3 class="text-sm font-medium text-base-content/60">Уведомления</h3>
+              <p class="text-lg font-semibold text-{lowStockResources > 0 ? 'warning' : 'success'}">
+                {#if lowStockResources > 0}
+                  {lowStockResources} с низким остатком
+                {:else}
+                  Все в порядке
+                {/if}
+              </p>
+              <p class="text-xs text-base-content/50">
+                {#if lowStockResources > 0}
+                  требуют внимания
+                {:else}
+                  нет активных предупреждений
+                {/if}
+              </p>
             </div>
           </div>
         </div>
-      {/each}
+      </div>
     </div>
 
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
