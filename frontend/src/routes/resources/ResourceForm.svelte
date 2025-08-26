@@ -99,7 +99,7 @@
   }
 </script>
 
-<div class="modal-open modal">
+<div class="modal modal-open">
   <div class="modal-box w-11/12 max-w-2xl">
     <form on:submit|preventDefault={handleSubmit}>
       <h3 class="mb-6 text-lg font-bold">
@@ -107,68 +107,68 @@
       </h3>
 
       <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div class="form-control col-span-1 md:col-span-2">
-          <label class="label" for="name">
+        <label class="form-control col-span-1 md:col-span-2 w-full">
+          <div class="label">
             <span class="label-text">Название ресурса <span class="text-error">*</span></span>
-          </label>
+          </div>
           <input
             id="name"
             type="text"
             bind:value={name}
             placeholder="Введите название ресурса"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             class:input-error={!name.trim()}
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
-        <div class="form-control">
-          <label class="label" for="unit">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Единица измерения <span class="text-error">*</span></span>
-          </label>
+          </div>
           <input
             id="unit"
             type="text"
             bind:value={unit}
             placeholder="например: кг, шт, литры"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             class:input-error={!unit.trim()}
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
-        <div class="form-control">
-          <label class="label" for="quantity">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Количество <span class="text-error">*</span></span>
-          </label>
+          </div>
           <input
             id="quantity"
             type="number"
             bind:value={quantity}
             placeholder="Введите количество"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             class:input-error={quantity < 0}
             min="0"
             step="1"
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
-        <div class="form-control col-span-1 md:col-span-2">
-          <label class="label" for="description">
+        <label class="form-control col-span-1 md:col-span-2 w-full">
+          <div class="label">
             <span class="label-text">Описание</span>
-          </label>
+          </div>
           <textarea
             id="description"
             bind:value={description}
             placeholder="Введите описание ресурса (необязательно)"
-            class="textarea-bordered textarea h-20 w-full"
+            class="textarea textarea-bordered h-20 w-full"
             disabled={loading}
           ></textarea>
-        </div>
+        </label>
       </div>
 
       <div class="modal-action">
@@ -182,7 +182,7 @@
           disabled={loading || !name.trim() || !unit.trim() || quantity < 0}
         >
           {#if loading}
-            <span class="loading loading-sm loading-spinner"></span>
+            <span class="loading loading-spinner loading-sm"></span>
             {isEditing ? 'Обновление...' : 'Создание...'}
           {:else}
             {isEditing ? 'Обновить ресурс' : 'Создать ресурс'}

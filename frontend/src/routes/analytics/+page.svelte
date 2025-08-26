@@ -197,7 +197,7 @@
       <p class="text-base-content/60">Полный анализ управления вашими ресурсами</p>
     </div>
     <div class="mt-4 sm:mt-0">
-      <select bind:value={selectedTimeRange} class="select-bordered select w-full max-w-xs">
+      <select bind:value={selectedTimeRange} class="select select-bordered w-full max-w-xs">
         <option value="7d">7 дней</option>
         <option value="30d" selected>30 дней</option>
         <option value="90d">90 дней</option>

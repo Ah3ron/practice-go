@@ -88,73 +88,73 @@
       </div>
 
       <form on:submit|preventDefault={handleRegister} class="space-y-4">
-        <div class="form-control">
-          <label class="label" for="username">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Имя пользователя <span class="text-error">*</span></span>
-          </label>
+          </div>
           <input
             id="username"
             type="text"
             bind:value={username}
             placeholder="Введите имя пользователя"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
-        <div class="form-control">
-          <label class="label" for="email">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Email <span class="text-error">*</span></span>
-          </label>
+          </div>
           <input
             id="email"
             type="email"
             bind:value={email}
             placeholder="Введите адрес электронной почты"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
-        <div class="form-control">
-          <label class="label" for="names">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Полное имя</span>
-          </label>
+          </div>
           <input
             id="names"
             type="text"
             bind:value={names}
             placeholder="Введите ваше полное имя"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             disabled={loading}
           />
-        </div>
+        </label>
 
-        <div class="form-control">
-          <label class="label" for="password">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Пароль <span class="text-error">*</span></span>
-          </label>
+          </div>
           <input
             id="password"
             type="password"
             bind:value={password}
             placeholder="Введите пароль (мин. 6 символов)"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
         <button
           type="submit"
-          class="btn mt-6 w-full btn-primary"
+          class="btn btn-primary w-full mt-6"
           class:loading
           disabled={loading || !username.trim() || !email.trim() || !password.trim()}
         >
           {#if loading}
-            <span class="loading loading-sm loading-spinner"></span>
+            <span class="loading loading-spinner loading-sm"></span>
             Создание аккаунта...
           {:else}
             Создать аккаунт

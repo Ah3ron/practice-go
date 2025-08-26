@@ -86,48 +86,48 @@
       </div>
 
       <form on:submit|preventDefault={handleLogin} class="space-y-4">
-        <div class="form-control">
-          <label class="label" for="username">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Имя пользователя</span>
-          </label>
+          </div>
           <input
             id="username"
             type="text"
             bind:value={username}
             on:keypress={handleKeyPress}
             placeholder="Введите ваше имя пользователя"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             class:input-error={!username.trim() && loading}
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
-        <div class="form-control">
-          <label class="label" for="password">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Пароль</span>
-          </label>
+          </div>
           <input
             id="password"
             type="password"
             bind:value={password}
             on:keypress={handleKeyPress}
             placeholder="Введите ваш пароль"
-            class="input-bordered input w-full"
+            class="input input-bordered w-full"
             class:input-error={!password.trim() && loading}
             disabled={loading}
             required
           />
-        </div>
+        </label>
 
         <button
           type="submit"
-          class="btn mt-6 w-full btn-primary"
+          class="btn btn-primary w-full mt-6"
           class:loading
           disabled={loading || !username.trim() || !password.trim()}
         >
           {#if loading}
-            <span class="loading loading-sm loading-spinner"></span>
+            <span class="loading loading-spinner loading-sm"></span>
             Вход...
           {:else}
             Войти

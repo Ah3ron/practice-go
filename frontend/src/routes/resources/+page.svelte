@@ -85,7 +85,7 @@
       <h1 class="mb-2 text-3xl font-bold text-base-content">Ресурсы</h1>
       <p class="text-base-content/60">Управляйте ресурсами вашей организации</p>
     </div>
-    <button class="btn mt-4 btn-primary sm:mt-0" on:click={() => (showCreateForm = true)}>
+    <button class="btn btn-primary mt-4 sm:mt-0" on:click={() => (showCreateForm = true)}>
       <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
@@ -95,14 +95,14 @@
 
   <!-- Search -->
   <div class="mb-6">
-    <div class="form-control w-full max-w-md">
+    <label class="form-control w-full max-w-md">
       <input
         type="text"
         placeholder="Поиск ресурсов..."
-        class="input-bordered input w-full"
+        class="input input-bordered w-full"
         bind:value={searchTerm}
       />
-    </div>
+    </label>
   </div>
 
   {#if loading}
@@ -155,7 +155,7 @@
                 </div>
 
                 <div class="dropdown dropdown-end">
-                  <div tabindex="0" role="button" class="btn btn-square btn-ghost btn-sm">
+                  <div tabindex="0" role="button" class="btn btn-ghost btn-square btn-sm">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -167,7 +167,7 @@
                   </div>
                   <ul
                     tabindex="0"
-                    class="dropdown-content menu z-[1] w-40 rounded-box border border-base-200 bg-base-100 p-2 shadow-lg"
+                    class="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 p-2 shadow border border-base-200"
                   >
                     <li>
                       <button on:click={() => handleEdit(resource)} class="flex items-center">
@@ -213,9 +213,9 @@
                 </div>
                 <div class="rounded-lg bg-base-200 p-3 text-center">
                   <div
-                    class="badge {(resource?.quantity || 0) < 100
+                    class="badge badge-sm {(resource?.quantity || 0) < 100
                       ? 'badge-warning'
-                      : 'badge-success'} badge-sm"
+                      : 'badge-success'}"
                   >
                     {(resource?.quantity || 0) < 100 ? 'Низкий остаток' : 'В наличии'}
                   </div>
